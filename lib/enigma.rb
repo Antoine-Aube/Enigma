@@ -39,4 +39,4 @@ end
 
 # pp random_number
 
-pp Enigma.new.generate_offset
+# pp Enigma.new.generate_offset
