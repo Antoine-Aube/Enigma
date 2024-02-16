@@ -18,32 +18,44 @@ RSpec.describe Enigma do
     it "#generate_offset" do
       allow_any_instance_of(Date).to receive(:strftime).with('%d%m%y').and_return("120225")
       
-      expect(enigma.generate_offset(nil)).to eq("0625")
+      generated_date = enigma.generate_numeric_date
+      expect(enigma.generate_offset(generated_date)).to eq("0625")
     end
     
     it "#generate_key" do
       allow_any_instance_of(Object).to receive(:rand).with(1000..9999).and_return(1234)
       
-      expect(enigma.generate_keys.length).to eq(4)
-      expect(enigma.generate_keys).to be_a(Object)
+      digits = enigma.random_digits
+      expect(enigma.generate_keys(digits).length).to eq(4)
+      expect(enigma.generate_keys(digits)).to be_a(Object)
       
-      keys = enigma.generate_keys
+      keys = enigma.generate_keys(digits)
       expect(keys["A"]).to eq(01)
       expect(keys["B"]).to eq(12)
       expect(keys["C"]).to eq(23)
       expect(keys["D"]).to eq(34)
     end
-    
+  
     it "#generate shifts" do 
       allow_any_instance_of(Date).to receive(:strftime).with('%d%m%y').and_return("120225")
       allow_any_instance_of(Object).to receive(:rand).with(1000..9999).and_return(1234)
+      generated_date = enigma.generate_numeric_date
+      digits = enigma.random_digits
+      key = enigma.generate_keys(digits)
+      offset = enigma.generate_offset(generated_date)
 
-      shifts = enigma.generate_shifts(nil)
+
+      shifts = enigma.generate_shifts(key, offset)
 
       expect(shifts["A"]).to eq(1)
       expect(shifts["B"]).to eq(18)
       expect(shifts["C"]).to eq(25)
       expect(shifts["D"]).to eq(39)
+    end
+  end
+
+  xdescribe "encryption" do
+    it "main encryption method" do
 
     end
   end
