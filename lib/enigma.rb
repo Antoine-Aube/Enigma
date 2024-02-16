@@ -10,7 +10,6 @@ class Enigma
     
     shifts = generate_shifts(keys, offset)
     alphabet = self.alphabet
-
     encrypted_string = encrypt_string(string, shifts, alphabet)
     output = {
       encryption: encrypted_string,
@@ -81,6 +80,4 @@ end
       "D" => keys["D"] + offset[3].to_i
     }
   end
-
 end
-
