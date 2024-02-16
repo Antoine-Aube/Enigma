@@ -5,7 +5,6 @@ RSpec.describe Enigma do
   let (:enigma) { Enigma.new }
   describe "initialize" do 
     it "exists" do 
-
       expect(enigma).to be_a(Enigma)
     end
   end
@@ -17,11 +16,22 @@ RSpec.describe Enigma do
     end
 
     it "#generate_offset" do
-      expect(enigma.generate_offset(nil)).to eq("0176")
+      allow_any_instance_of(Date).to receive(:strftime).with('%d%m%y').and_return("120225")
+      
+      expect(enigma.generate_offset(nil)).to eq("0625")
     end
 
     it "#generate_key" do
-      expect(enigma.generate_keys.length).to eq(5)
+      allow_any_instance_of(Object).to receive(:rand).with(1000..9999).and_return(1234)
+
+      expect(enigma.generate_keys.length).to eq(4)
+      expect(enigma.generate_keys).to be_a(Object)
+
+      keys = enigma.generate_keys
+      expect(keys["A"]).to eq(01)
+      expect(keys["B"]).to eq(12)
+      expect(keys["C"]).to eq(23)
+      expect(keys["D"]).to eq(34)
     end
   end
 end
