@@ -2,20 +2,16 @@ require 'date'
 
 class Enigma
   def encrypt(string, key = nil, date = nil )
-    encrypted_string = []
-    digits = random_digits
-    if date == nil
-      date = date_generator
-    end 
-
-    if key == nil
-      key = generate_keys(digits)
-    end
-
-    offset = generate_offest(date)
+    date ||= generate_numeric_date
+    key ||= random_digits
     
-    shifts = generate_shifts(key, offset)
-      
+    keys = generate_keys(key)
+    offset = generate_offset(date)
+    
+    shifts = generate_shifts(keys, offset)
+    alphabet = self.alphabet
+
+    encrypted_string = encrypt_string(string, shifts, alphabet)
     output = {
       encryption: encrypted_string,
       key: key,
@@ -23,8 +19,33 @@ class Enigma
     }
   end
 
+  def encrypt_string(string, shifts, alphabet)
+    string_arr = string.downcase.chars
+    encrypt_arr = string_arr.map.each_with_index do | char, index |
+      if index % 4 == 0
+        shift = shifts["A"]
+      elsif index % 4 == 1
+        shift = shifts ["B"]
+      elsif index % 4 == 2
+        shift = shifts["C"]
+      else
+        shift = shifts["D"]
+      end
+
+    if alphabet.include?(char)
+      starting_index = alphabet.index(char)
+      final_index = (starting_index + shift) % alphabet.length 
+    end 
+
+      alphabet[final_index]
+    end
+    encrypt_arr.join("")
+  end
+
+
+
   def alphabet
-    ("a".."z").to_a << ""
+    ("a".."z").to_a << " "
   end
 
 def random_digits
@@ -42,14 +63,14 @@ end
   end
 
   def generate_offset(date_generator)
-    squared = date_generator ** 2
+    squared = date_generator.to_i ** 2
     last_four = squared.to_s[-4..]
   end
 
   def generate_numeric_date
     date = Date.today
     formatted = date.strftime('%d%m%y')
-    digits = formatted.to_i
+    digits = formatted
   end
 
   def generate_shifts(keys, offset)
@@ -63,27 +84,3 @@ end
 
 end
 
-# date = Date.today
-
-# formatted = date.strftime('%d%m%y')
-
-# puts formatted.to_i
-
-# alphabet = ("a".."z").to_a << ""
-# date = nil
-# keys =  Enigma.new.generate_keys
-# offset = Enigma.new.generate_offset(date)
-# shifts = Enigma.new.generate_shifts(nil)
-# pp keys
-# pp offset
-# pp shifts
-# require 'pry';binding.pry
-# pp Enigma.new.generate_offset(nil)
-
-
-
-# random_number = format('%05d', rand(0..99999))
-
-# pp random_number
-
-# pp Enigma.new.generate_offset
