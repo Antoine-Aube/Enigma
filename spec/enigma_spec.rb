@@ -71,5 +71,20 @@ RSpec.describe Enigma do
       expect(enigma.encrypt(string, key, date)). to eq(expected_output)
 
     end
+
+    it "encrypts without being given a specific key or date" do 
+      allow_any_instance_of(Date).to receive(:strftime).with('%d%m%y').and_return("120225")
+      allow_any_instance_of(Object).to receive(:rand).with(1000..9999).and_return(1234)
+      expected_output  = {
+        encryption: "iwjxpru scb",
+        key: "01234",
+        date: "120225"
+      }
+
+      string = "hello world"
+      output = enigma.encrypt(string) 
+
+      expect(output).to eq(expected_output)
+    end
   end
 end
