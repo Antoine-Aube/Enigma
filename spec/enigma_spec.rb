@@ -87,4 +87,21 @@ RSpec.describe Enigma do
       expect(output).to eq(expected_output)
     end
   end
+
+  describe "decryption" do 
+    it "#decrypt" do 
+      string = "hello world"
+      key = "02715"
+      date = "040895"
+
+      encrypted = enigma.encrypt(string, key, date)
+
+      expected_output  = {
+        encryption: "hello world",
+        key: "02715",
+        date: "040895"
+      }
+      expect(enigma.decrypt(encrypted[:encryption], key, date)). to eq(expected_output)
+    end
+  end
 end
