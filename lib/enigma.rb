@@ -41,6 +41,21 @@ class Enigma
     encrypt_arr.join("")
   end
 
+  def decrypt(string, key, date = nil )
+    date ||= generate_numeric_date
+    
+    keys = generate_keys(key)
+    offset = generate_offset(date)
+    
+    shifts = generate_shifts(keys, offset)
+    alphabet = self.alphabet.reverse
+    encrypted_string = encrypt_string(string, shifts, alphabet)
+    output = {
+      encryption: encrypted_string,
+      key: key,
+      date: date
+    }
+  end
 
 
   def alphabet
